@@ -42,6 +42,7 @@ public class CommentController {
             @RequestParam long postId,
             @Valid @RequestBody Comment newcomment
     ){
+        System.out.println("queryParam "+ postId);
         Optional<Post> getPost= postRepository.findById(postId);
         return getPost.map(post -> {
             newcomment.setPost(post);

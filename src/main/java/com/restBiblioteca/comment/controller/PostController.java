@@ -1,5 +1,6 @@
 package com.restBiblioteca.comment.controller;
 
+import com.restBiblioteca.comment.Entity.Comment;
 import com.restBiblioteca.comment.Entity.Post;
 import com.restBiblioteca.comment.exeption.ResourceNotFoundExeption;
 import com.restBiblioteca.comment.respository.PostRepository;
@@ -20,19 +21,26 @@ public class PostController {
     private PostRepository postRepository;
 
     @GetMapping
-    private ResponseEntity<Page<Post>> getAllPost(
+    public ResponseEntity<Page<Post>> getAllPost(
             Pageable page
     ){
         return ResponseEntity.ok(postRepository.findAll(page));
     }
+
+    @GetMapping("/{id}")
+    public  ResponseEntity<Post> getPostById(
+            @PathVariable Long id
+    ){
+        return postRepository.findById(id).map(ResponseEntity::ok).orElseThrow(()-> new ResourceNotFoundExeption("Post by id: "+id+" is not found"));
+    }
     @PostMapping
-    private ResponseEntity<Post> createPost(
+    public ResponseEntity<Post> createPost(
            @Valid @RequestBody Post post
     ){
         return ResponseEntity.status(HttpStatus.CREATED).body(postRepository.save(post));
     }
     @PutMapping("/{id}")
-    private ResponseEntity<Post> updatePost(
+    public ResponseEntity<Post> updatePost(
             @PathVariable Long id,
             @Valid @RequestBody Post post
     ){
